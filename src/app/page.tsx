@@ -1,6 +1,10 @@
-import Header from "@/components/organisms/Header/Header";
+import request from "@/lib/request";
+import { endpoint } from "@/lib/url";
+import { User } from "@prisma/client";
 
-export default function Home() {
+export default async function Home() {
+  const users = await request.get(endpoint.appApi + 'user/all')
+  
   return (
     <>
     <ul>
@@ -9,6 +13,17 @@ export default function Home() {
           return (
             <li key={path.path}>
               <a className="text-blue-600" href={path.path}>{path.path}</a>：{path.text}
+            </li>
+          )
+        })
+      }
+    </ul>
+    <ul>
+      {
+        users.data?.map((user: User) => {
+          return (
+            <li key={user.id}>
+              {user.id}：{user.name}: {user.email}
             </li>
           )
         })
