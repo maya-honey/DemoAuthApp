@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function Header() {
     return (
         <header className="flex justify-between">
-            <div className="text-2xl">demo app</div>
+            <div className="text-2xl"><Link href='/'>demo app</Link></div>
             <div className="flex gap-2">
                 <Link
                     href='/signup'
