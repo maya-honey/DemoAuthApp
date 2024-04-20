@@ -4,6 +4,8 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+// https://www.prisma.io/docs/orm/prisma-migrate/workflows/development-and-production
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -16,6 +18,7 @@ datasource db {
 model User {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
+  name      String
   email     String   @unique
-  name      String?
+  password  String
 }
