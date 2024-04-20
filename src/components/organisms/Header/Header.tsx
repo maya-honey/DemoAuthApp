@@ -1,4 +1,3 @@
-import Button from "@/components/atoms/Button/Button";
 import Link from "next/link";
 
 export default function Header() {

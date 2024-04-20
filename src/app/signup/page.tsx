@@ -1,4 +1,5 @@
 'use client'
+import Button from "@/components/atoms/Button/Button";
 import request from "@/lib/request";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
@@ -94,12 +95,12 @@ export default function Signup() {
                             />
                         </div>
                         <div className="mt-6">
-                            <button
+                            <Button
                                 type="submit"
                                 className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                             >
                                 新規登録
-                            </button>
+                            </Button>
                         </div>
                     </form>
                     {errors.map((error) => (
