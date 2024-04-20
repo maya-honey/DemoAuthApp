@@ -16,7 +16,7 @@ export async function POST(req: NextRequest): Promise<NextResponse>
     
         const user = await createUser(name, email, hashedPassword)
         
-        return NextResponse.json(user)
+        return NextResponse.json({user: user})
     } catch(err) {
         console.error(err)
         return NextResponse.json({error: 'Failed to create user', })
