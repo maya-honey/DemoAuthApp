@@ -3,12 +3,27 @@ import { PrismaClient } from "@prisma/client"
 const prisma = new PrismaClient()
 
 export async function fetchUsers() {
-    try{
-        const users = await prisma.user.findMany()
+    const users = await prisma.user.findMany()
 
-        return users
-    } catch (error) {
-        console.error(error)
-        throw new Error('Failed to fetch users')
-    }
+    return users
+}
+
+export async function fetchUserByEmail(email:string) {
+    const user = await prisma.user.findUnique({
+        where: {
+            email: email
+        }
+    })
+    return user
+}
+
+export async function createUser(name:string, email:string, password:string)
+{
+    return await prisma.user.create({
+        data: {
+            name: name,
+            email: email,
+            password: password,
+        }
+    })
 }
