@@ -20,7 +20,7 @@ export default async function RootLayout({
       <body className={inter.className}>
         <Header/>
         {children}
-        </body>
+      </body>
     </html>
   );
 }
