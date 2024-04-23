@@ -1,6 +1,7 @@
 'use client'
 import Button from "@/components/atoms/Button/Button";
 import request from "@/lib/request";
+import { signIn } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -17,15 +18,30 @@ export default function Signin() {
 
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        setErrors([])
 
-        const res = await request.post('/api/auth/signin', {...input})
-        if (!res.data.result || res.data.error) {
-            console.log('koreda')
-            setErrors([res.data.error] || ['ログインに失敗しました'])
-            return
-        } 
+        try {
+            const res = await signIn("credentials", {
+                email: input.email,
+                password: input.password,
+            })
+            console.log(res)
+            if (! res?.ok) {
+                setErrors(['ログインに失敗しました'])
+                return
+            }
+        } catch (err) {
+            setErrors(['ログインに失敗しました'])
+        }
 
-        router.push("/")
+        // const res = await request.post('/api/signin', {...input})
+        // if (!res.data.result || res.data.error) {
+        //     console.log('koreda')
+        //     setErrors([res.data.error] || ['ログインに失敗しました'])
+        //     return
+        // } 
+
+        // router.push("/")
     }
     return (
         <div

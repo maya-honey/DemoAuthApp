@@ -19,7 +19,7 @@ export default function Signup() {
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        const res = await request.post('/api/auth/signup', {...input})
+        const res = await request.post('/api/signup', {...input})
         if (!res.data.user || res.data.error) {
             setErrors([res.data.error] || ['ユーザー登録に失敗しました'])
             return

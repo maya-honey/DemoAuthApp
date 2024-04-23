@@ -1,3 +1,6 @@
+'use client'
+import Button from "@/components/atoms/Button/Button";
+import { signOut } from "next-auth/react";
 import Link from "next/link";
 
 export default function Header() {
@@ -13,6 +16,10 @@ export default function Header() {
                     href='/signin'
                     className="flex h-[48px] items-center justify-center rounded-md bg-gray-100 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3"
                 >ログイン</Link>
+                <Button
+                    onClick={async() => {await signOut()}}
+                    className="flex h-[48px] items-center justify-center rounded-md bg-gray-100 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3"
+                >ログアウト</Button>
             </div>
         </header>
     )

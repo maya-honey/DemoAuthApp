@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client"
+import { PrismaClient, User } from "@prisma/client"
 
 const prisma = new PrismaClient()
 
@@ -8,7 +8,7 @@ export async function fetchUsers() {
     return users
 }
 
-export async function fetchUserByEmail(email:string) {
+export async function fetchUserByEmail(email:string): Promise<User | null>{
     const user = await prisma.user.findUnique({
         where: {
             email: email
@@ -17,7 +17,7 @@ export async function fetchUserByEmail(email:string) {
     return user
 }
 
-export async function createUser(name:string, email:string, password:string)
+export async function createUser(name:string, email:string, password:string): Promise<User>
 {
     return await prisma.user.create({
         data: {
