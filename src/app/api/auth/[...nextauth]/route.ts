@@ -59,11 +59,7 @@ const authOptions: NextAuthOptions = {
             // デフォルトでは、セキュリティを強化するためにトークンのサブセットのみが返されます。
             //  jwt() コールバックを介してトークンに追加したもの (上記の access_token や user.id など) 
             // を利用可能にしたい場合は、それをここで明示的に転送して、クライアントが利用できるようにする必要があります。
-            console.log('session session', session)
-            console.log('session token', token)
-            console.log('session user', user)
             if (token) {
-                session.user.username = token.username
                 session.user.email = token.email
                 session.user.id = token.id
             }
