@@ -1,9 +1,41 @@
 import { createUser, fetchUserByEmail, fetchUsers } from "@/lib/data";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from 'bcrypt'
+import mailer from 'nodemailer'
 
 export async function POST(req: NextRequest): Promise<NextResponse>
 {
+    const smtip = mailer.createTransport({
+        host: 'mailhog', // メールサーバー
+        port: 1025,
+        secure: false, // 465 番ポートを使う場合。それ以外は false
+        requireTLS: false,
+        tls: {
+        rejectUnauthorized: false,
+        },
+        auth: { // 認証情報
+            user: 'user', // ユーザー名
+            pass: 'password', // パスワード
+        },
+    })
+
+    const mail = {
+        from: 'foo@example.com', // 送信元メールアドレス
+        to: 'rkinc.yoshida@gmail.com', // 送信先メールアドレス
+        subject: 'Email Test Mail',
+        text: `Email was sent!`,
+        html: `<p>Email was sent!</p>`,
+    };
+
+    try {
+        const result = await smtip.sendMail(mail);
+        console.log('+++ Sent +++');
+        console.log(result);
+    } catch (err) {
+        console.log('--- Error ---');
+        console.log(err);
+    }
+
     try {
         const { name, email, password} = await req.json()
 

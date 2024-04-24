@@ -24,6 +24,13 @@ services:
       - db-data:/var/lib/mysql
     ports:
       - "3306:3306"
-
+  mailhog:
+    image: mailhog/mailhog:latest
+    ports:
+      - '8025:8025'
+      - '1025:1025'
+    environment:
+      MH_STORAGE: maildir
+      MH_MAILDIR_PATH: /tmp/maildir
 volumes:
   db-data:
