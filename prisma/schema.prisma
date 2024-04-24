@@ -20,5 +20,17 @@ model User {
   createdAt DateTime @default(now())
   name      String
   email     String   @unique
+  emailVerified DateTime? @map(name: "email_verified")
   password  String
+}
+
+model VerificationRequest {
+  id         Int      @default(autoincrement()) @id
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  createdAt  DateTime  @default(now()) @map(name: "created_at")
+  updatedAt  DateTime  @default(now()) @map(name: "updated_at")
+
+  @@map(name: "verification_requests")
 }

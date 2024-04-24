@@ -3,9 +3,15 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials"
 import EmailProvider from "next-auth/providers/email"
 import bcrypt from 'bcrypt'
+import { PrismaClient } from "@prisma/client";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import Adapters from "next-auth/adapters"
+const prisma = new PrismaClient()
+
 // import CredentialsProvider from "next-auth/providers/credentials"
 // https://next-auth.js.org/configuration/options
 const authOptions: NextAuthOptions = {
+    adapter: PrismaAdapter(prisma),
     providers: [
         EmailProvider({
             // https://next-auth.js.org/providers/email
