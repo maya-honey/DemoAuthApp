@@ -1,12 +1,17 @@
 import { fetchUserByEmail } from "@/lib/data";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials"
+import EmailProvider from "next-auth/providers/email"
 import bcrypt from 'bcrypt'
-import { error } from "console";
 // import CredentialsProvider from "next-auth/providers/credentials"
 // https://next-auth.js.org/configuration/options
 const authOptions: NextAuthOptions = {
     providers: [
+        EmailProvider({
+            // https://next-auth.js.org/providers/email
+            server: process.env.EMAIL_SERVER,
+            from: process.env.EMAIL_FROM
+        }),
         CredentialsProvider({
             name: "credentials",
             credentials: {
