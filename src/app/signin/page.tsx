@@ -21,27 +21,15 @@ export default function Signin() {
         setErrors([])
 
         try {
-            const res = await signIn("credentials", {
+            await signIn("credentials", {
                 email: input.email,
                 password: input.password,
             })
-            console.log(res)
-            if (! res?.ok) {
-                setErrors(['ログインに失敗しました'])
-                return
-            }
         } catch (err) {
+            console.log('これや')
             setErrors(['ログインに失敗しました'])
+            return
         }
-
-        // const res = await request.post('/api/signin', {...input})
-        // if (!res.data.result || res.data.error) {
-        //     console.log('koreda')
-        //     setErrors([res.data.error] || ['ログインに失敗しました'])
-        //     return
-        // } 
-
-        // router.push("/")
     }
     return (
         <div
