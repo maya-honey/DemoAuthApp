@@ -20,34 +20,34 @@ export async function POST(req: NextRequest): Promise<NextResponse>
     })
 
     const mail = {
-        from: 'foo@example.com', // 送信元メールアドレス
+        from: 'demoauthapp@example.com', // 送信元メールアドレス
         to: 'rkinc.yoshida@gmail.com', // 送信先メールアドレス
-        subject: 'Email Test Mail',
-        text: `Email was sent!`,
-        html: `<p>Email was sent!</p>`,
+        subject: '会員登録しました！',
+        text: `登録成功`,
+        html: `<p>登録成功</p>`,
     };
 
-    try {
-        const result = await smtip.sendMail(mail);
-        console.log('+++ Sent +++');
-        console.log(result);
-    } catch (err) {
-        console.log('--- Error ---');
-        console.log(err);
-    }
-
+    
     try {
         const { name, email, password} = await req.json()
-
-        if (!name || !email || !password) return NextResponse.json({error: '入力内容に不備があります'})
         
+        if (!name || !email || !password) return NextResponse.json({error: '入力内容に不備があります'})
+            
         const registeredUser = await fetchUserByEmail(email)
         if (registeredUser) return NextResponse.json({error: '既に登録されているメールアドレスです'})
-    
+            
         const hashedPassword = await bcrypt.hash(password, 10)
-    
-        const user = await createUser(name, email, hashedPassword)
         
+        const user = await createUser(name, email, hashedPassword)
+            
+        try {
+            const result = await smtip.sendMail(mail);
+            console.log('+++ Sent +++');
+            console.log(result);
+        } catch (err) {
+            console.log('--- Error ---');
+            console.log(err);
+        }
         return NextResponse.json({user: user})
     } catch(err) {
         console.error(err)
