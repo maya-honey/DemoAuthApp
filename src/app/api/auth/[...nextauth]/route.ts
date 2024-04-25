@@ -1,23 +1,12 @@
 import { fetchUserByEmail } from "@/lib/data";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials"
-import EmailProvider from "next-auth/providers/email"
 import bcrypt from 'bcrypt'
-import { PrismaClient } from "@prisma/client";
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import Adapters from "next-auth/adapters"
-const prisma = new PrismaClient()
 
 // import CredentialsProvider from "next-auth/providers/credentials"
 // https://next-auth.js.org/configuration/options
 const authOptions: NextAuthOptions = {
-    adapter: PrismaAdapter(prisma),
     providers: [
-        EmailProvider({
-            // https://next-auth.js.org/providers/email
-            server: process.env.EMAIL_SERVER,
-            from: process.env.EMAIL_FROM
-        }),
         CredentialsProvider({
             name: "credentials",
             credentials: {
@@ -43,7 +32,7 @@ const authOptions: NextAuthOptions = {
                     throw new Error('ログイン失敗')
                 }
             }
-        })
+        }),
     ],
     callbacks: {
         // https://next-auth.js.org/configuration/callbacks

@@ -32,5 +32,6 @@ model VerificationRequest {
   createdAt  DateTime  @default(now()) @map(name: "created_at")
   updatedAt  DateTime  @default(now()) @map(name: "updated_at")
 
+  @@unique([identifier, token])
   @@map(name: "verification_requests")
 }
