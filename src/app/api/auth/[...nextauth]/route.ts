@@ -1,7 +1,12 @@
 import { fetchUserByEmail } from "@/lib/data";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials"
+import EmailProvider from "next-auth/providers/email"
 import bcrypt from 'bcrypt'
+import { PrismaClient } from "@prisma/client";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+// import { PrismaAdapter } from "@next-auth/prisma-adapter";
+const prisma = new PrismaClient()
 
 // import CredentialsProvider from "next-auth/providers/credentials"
 // https://next-auth.js.org/configuration/options
@@ -19,20 +24,32 @@ const authOptions: NextAuthOptions = {
                 // null を返すと、ユーザーに詳細を確認するよう促すエラーが表示されます。
                 // エラーをスローすると、ユーザーはエラー メッセージをクエリ パラメータとして含むエラー ページに送信されます。
                 try {
+                    console.log('ここまでどう1')
                     if (! credentials?.email || ! credentials?.password) return null
                     
                     const user = await fetchUserByEmail(credentials.email)
                     if (! user) return null
 
+                    console.log('ここまでどう2')
+
                     const isCorrectPassword = await bcrypt.compare(credentials.password, user.password)
                     if (! isCorrectPassword) return null
 
+                    console.log('ここまでどう3', user)
+
                     return user
                 } catch(err) {
+                    console.log('ここまでどう1', err)
+
                     throw new Error('ログイン失敗')
                 }
             }
         }),
+        EmailProvider({
+            server: process.env.EMAIL_SERVER,
+            from: process.env.EMAIL_FROM,
+            maxAge: 24 * 60 * 60,
+        })
     ],
     callbacks: {
         // https://next-auth.js.org/configuration/callbacks
@@ -47,11 +64,7 @@ const authOptions: NextAuthOptions = {
             // または更新されるとき (つまり、クライアントでセッションがアクセスされるとき) 
             // に必ず呼び出されます
             // 戻り値は暗号化され、Cookie に保存されます。
-            if (user) {
-                token.username = user.name
-                token.email = user.email
-                token.id = user.id
-            }
+            console.log('jwtここまでどう2', token)
             return token
         },
         async session({ session, token, user }) {
@@ -59,17 +72,36 @@ const authOptions: NextAuthOptions = {
             // デフォルトでは、セキュリティを強化するためにトークンのサブセットのみが返されます。
             //  jwt() コールバックを介してトークンに追加したもの (上記の access_token や user.id など) 
             // を利用可能にしたい場合は、それをここで明示的に転送して、クライアントが利用できるようにする必要があります。
+            console.log('sessionここまでどう1', {
+                'session': session,
+                'token': token,
+                'user': user
+            })
             if (token) {
                 session.user.email = token.email
                 session.user.id = token.id
             }
             return session
+        },
+        async signIn({ user, account, profile, email, credentials }) {
+            // コールバックを使用して、signIn()ユーザーにサインインを許可するかどうかを制御します。
+            // 許可する場合はtrueを返す
+            // デフォルトのエラーメッセージを表示するにはfalseを、あるいはリダイレクト先を指定することもできる
+            console.log('これsignIn', {
+                'user': user,
+                'account': account,
+                'profile': profile,
+                'email': email,
+                'credentials': credentials
+            })
+            return true
         }
     },
     secret: process.env.NEXTAUTH_SECRET,
     pages: {
         signIn: '/signin',
     },
+    adapter: PrismaAdapter(prisma)
 }
 
 const handler = NextAuth(authOptions)

@@ -23,7 +23,7 @@ export async function createUser(name:string, email:string, password:string): Pr
         data: {
             name: name,
             email: email,
-            password: password,
+            password: password
         }
     })
 }

@@ -24,6 +24,7 @@ export default function Signin() {
             await signIn("credentials", {
                 email: input.email,
                 password: input.password,
+                callbackUrl: '/',
             })
         } catch (err) {
             console.log('これや')
