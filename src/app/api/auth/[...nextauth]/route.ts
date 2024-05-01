@@ -13,7 +13,7 @@ const prisma = new PrismaClient()
 const authOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({
-            name: "credentials",
+            id: "credentials",
             credentials: {
                 email: { label: "Email", type: "email", placeholder: "example@example.com" },
                 password: { label: "Password", type: "password" }
@@ -25,17 +25,12 @@ const authOptions: NextAuthOptions = {
                 // エラーをスローすると、ユーザーはエラー メッセージをクエリ パラメータとして含むエラー ページに送信されます。
                 try {
                     console.log('ここまでどう1')
-                    if (! credentials?.email || ! credentials?.password) return null
                     
                     const user = await fetchUserByEmail(credentials.email)
                     if (! user) return null
-
-                    console.log('ここまでどう2')
-
+                    
                     const isCorrectPassword = await bcrypt.compare(credentials.password, user.password)
                     if (! isCorrectPassword) return null
-
-                    console.log('ここまでどう3', user)
 
                     return user
                 } catch(err) {
@@ -101,7 +96,10 @@ const authOptions: NextAuthOptions = {
     pages: {
         signIn: '/signin',
     },
-    adapter: PrismaAdapter(prisma)
+    adapter: PrismaAdapter(prisma),
+    session: {
+        strategy: 'jwt',
+    },
 }
 
 const handler = NextAuth(authOptions)
