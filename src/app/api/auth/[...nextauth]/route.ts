@@ -4,7 +4,8 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import EmailProvider from "next-auth/providers/email"
 import bcrypt from 'bcrypt'
 import { PrismaClient } from "@prisma/client";
-import { PrismaAdapter } from "@auth/prisma-adapter";
+import { PrismaAdapter } from "@auth/prisma-adapter"
+import { ResendProvider } from "@/lib/provider";
 // import { PrismaAdapter } from "@next-auth/prisma-adapter";
 const prisma = new PrismaClient()
 
@@ -41,7 +42,8 @@ const authOptions: NextAuthOptions = {
             server: process.env.EMAIL_SERVER,
             from: process.env.EMAIL_FROM,
             maxAge: 24 * 60 * 60,
-        })
+        }),
+        ResendProvider(),
     ],
     callbacks: {
         // https://next-auth.js.org/configuration/callbacks

@@ -14,78 +14,37 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
-
 model User {
-  id            String          @id @default(cuid())
+  id            Int            @id @default(autoincrement())
   name          String?
   email         String         @unique
-  emailVerified DateTime?
-  image         String?
+  emailVerified DateTime?       @map("email_verified")
   password      String?
-  Session       Session[]
-  Account       Account?
-  // Optional for WebAuthn support
-  Authenticator Authenticator[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt  @map("updated_at")
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Account {
-  id                       String  @id @default(cuid())
-  userId                   String  @unique
-  type                     String
-  provider                 String
-  providerAccountId        String
-  refresh_token            String? @db.Text
-  access_token             String? @db.Text
-  expires_at               Int?
-  token_type               String?
-  scope                    String?
-  id_token                 String? @db.Text
-  session_state            String?
-  refresh_token_expires_in Int?
-  user                     User?   @relation(fields: [userId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([provider, providerAccountId])
-  @@index([userId])
-}
-
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([userId])
+  @@map("users")
 }
 
 model VerificationToken {
   identifier String
   token      String
   expires    DateTime
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt  @map("updated_at")
 
   @@unique([identifier, token])
+  @@map("verification_tokens")
 }
 
-// Optional for WebAuthn support
-model Authenticator {
-  id                   String  @id @default(cuid())
-  credentialID         String  @unique
-  userId               String
-  providerAccountId    String
-  credentialPublicKey  String
-  counter              Int
-  credentialDeviceType String
-  credentialBackedUp   Boolean
-  transports           String?
+model Admin {
+  id            Int            @id @default(autoincrement())
+  name          String?
+  password      String?
+  email         String         @unique
+  role          Int
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt  @map("updated_at")
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@map("admins")
 }
