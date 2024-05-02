@@ -24,8 +24,6 @@ const authOptions: NextAuthOptions = {
                 // null を返すと、ユーザーに詳細を確認するよう促すエラーが表示されます。
                 // エラーをスローすると、ユーザーはエラー メッセージをクエリ パラメータとして含むエラー ページに送信されます。
                 try {
-                    console.log('ここまでどう1')
-                    
                     const user = await fetchUserByEmail(credentials.email)
                     if (! user) return null
                     
@@ -34,7 +32,6 @@ const authOptions: NextAuthOptions = {
 
                     return user
                 } catch(err) {
-                    console.log('ここまでどう1', err)
 
                     throw new Error('ログイン失敗')
                 }
@@ -59,7 +56,6 @@ const authOptions: NextAuthOptions = {
             // または更新されるとき (つまり、クライアントでセッションがアクセスされるとき) 
             // に必ず呼び出されます
             // 戻り値は暗号化され、Cookie に保存されます。
-            console.log('jwtここまでどう2', token)
             return token
         },
         async session({ session, token, user }) {
@@ -67,11 +63,6 @@ const authOptions: NextAuthOptions = {
             // デフォルトでは、セキュリティを強化するためにトークンのサブセットのみが返されます。
             //  jwt() コールバックを介してトークンに追加したもの (上記の access_token や user.id など) 
             // を利用可能にしたい場合は、それをここで明示的に転送して、クライアントが利用できるようにする必要があります。
-            console.log('sessionここまでどう1', {
-                'session': session,
-                'token': token,
-                'user': user
-            })
             if (token) {
                 session.user.email = token.email
                 session.user.id = token.id
@@ -82,13 +73,6 @@ const authOptions: NextAuthOptions = {
             // コールバックを使用して、signIn()ユーザーにサインインを許可するかどうかを制御します。
             // 許可する場合はtrueを返す
             // デフォルトのエラーメッセージを表示するにはfalseを、あるいはリダイレクト先を指定することもできる
-            console.log('これsignIn', {
-                'user': user,
-                'account': account,
-                'profile': profile,
-                'email': email,
-                'credentials': credentials
-            })
             return true
         }
     },
