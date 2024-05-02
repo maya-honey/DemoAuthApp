@@ -8,9 +8,9 @@ export default async function MyPage() {
             <h2>Mypage</h2>
             <div>
                 <p>session情報（サーバーサイドでセッション取得）</p>
-                <div>
+                <pre className="py-6 px-4 whitespace-pre-wrap break-all">
                     {JSON.stringify(session, null, 2)}
-                </div>
+                </pre>
             </div>
         </div>
     )

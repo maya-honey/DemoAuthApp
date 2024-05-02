@@ -18,6 +18,7 @@ export default async function Home() {
         })
       }
     </ul>
+    <div>ユーザーデータ取得↓</div>
     <ul>
       {
         users.data?.map((user: User) => {

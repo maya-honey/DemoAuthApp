@@ -1,9 +1,9 @@
 'use client'
 import Button from "@/components/atoms/Button/Button";
-import request from "@/lib/request";
+// import { signIn } from "@/auth"
 import { signIn } from "next-auth/react";
+// import { signIn } from "next-auth/react";
 import Head from "next/head";
-import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 export default function Signin() {
@@ -14,35 +14,6 @@ export default function Signin() {
 
     const [errors, setErrors] = useState<string[]>([])
 
-    const router = useRouter()
-
-    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        setErrors([])
-
-        try {
-            const res = await signIn("credentials", {
-                email: input.email,
-                password: input.password,
-            })
-            console.log(res)
-            if (! res?.ok) {
-                setErrors(['ログインに失敗しました'])
-                return
-            }
-        } catch (err) {
-            setErrors(['ログインに失敗しました'])
-        }
-
-        // const res = await request.post('/api/signin', {...input})
-        // if (!res.data.result || res.data.error) {
-        //     console.log('koreda')
-        //     setErrors([res.data.error] || ['ログインに失敗しました'])
-        //     return
-        // } 
-
-        // router.push("/")
-    }
     return (
         <div
             style={{ height: "88vh" }}
@@ -58,7 +29,15 @@ export default function Signin() {
             </div>
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-                    <form onSubmit={onSubmit}>
+                    <form 
+                        action={async () => {
+                            await signIn("credentials", {
+                                email: input.email,
+                                password: input.password,
+                                redirectTo: '/',
+                            })
+                        }}
+                    >
                         <div className="mt-6">
                             <label
                                 htmlFor="email"
